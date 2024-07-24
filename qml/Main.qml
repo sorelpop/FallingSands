@@ -1,6 +1,7 @@
 import Felgo 4.0
 import QtQuick 2.0
 import QtQuick.Dialogs
+import QtQuick.Controls
 
 GameWindow {
     id: gameWindow
@@ -29,6 +30,7 @@ GameWindow {
     Scene {
         id: scene
         property color penColor: "darkblue"
+        property int penSize: 3
 
         // the "logical size" - the scene content is auto-scaled to match the GameWindow size
         width: 320
@@ -52,6 +54,7 @@ GameWindow {
                                            x: mouse.x,
                                            y: mouse.y,
                                            color: scene.penColor,
+                                           grainSize: scene.penSize
                                        }
 
                                        entityManager.createEntityFromUrlWithProperties(
@@ -109,14 +112,30 @@ GameWindow {
 
                 onClicked: colorPicker.visible = true
             }
+
+            SpinBox {
+                id: grainSizePicker
+
+                property bool toolTipVisible: false
+
+                value: 3
+                from: 1
+                to: 5
+
+                height: sandColorButton.height
+
+                ToolTip.text: qsTr("Grain size")
+                ToolTip.visible: toolTipVisible
+
+                onValueModified: scene.penSize = grainSizePicker.value
+                onHoveredChanged: grainSizePicker.toolTipVisible = grainSizePicker.hovered
+            }
         }
 
         ColorDialog {
             id: colorPicker
             visible:false
-            onAccepted: {
-                scene.penColor = colorPicker.selectedColor
-            }
+            onAccepted: scene.penColor = colorPicker.selectedColor
         }
     }
 }

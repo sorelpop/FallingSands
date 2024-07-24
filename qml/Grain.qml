@@ -6,9 +6,10 @@ EntityBase {
     entityType: "grain"
 
     property color color: "lightgreen"
+    property int grainSize: 3
 
-    width: 3
-    height: 3
+    width: grainSize
+    height: grainSize
 
     Rectangle {
         color: grain.color
