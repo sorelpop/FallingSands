@@ -5,11 +5,13 @@ EntityBase {
     id: grain
     entityType: "grain"
 
+    property color color: "lightgreen"
+
     width: 3
     height: 3
 
     Rectangle {
-        color: "lightgreen"
+        color: grain.color
         anchors.fill: collider
         radius: 180
     }

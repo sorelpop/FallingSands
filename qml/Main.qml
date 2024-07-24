@@ -1,5 +1,6 @@
 import Felgo 4.0
 import QtQuick 2.0
+import QtQuick.Dialogs
 
 GameWindow {
     id: gameWindow
@@ -27,6 +28,7 @@ GameWindow {
 
     Scene {
         id: scene
+        property color penColor: "darkblue"
 
         // the "logical size" - the scene content is auto-scaled to match the GameWindow size
         width: 320
@@ -41,7 +43,7 @@ GameWindow {
         Rectangle {
             id: rectangle
             anchors.fill: parent
-            color: "grey"
+            color: "white"
 
             MouseArea {
                 anchors.fill: parent
@@ -49,6 +51,7 @@ GameWindow {
                                        var newGrainProperties = {
                                            x: mouse.x,
                                            y: mouse.y,
+                                           color: scene.penColor,
                                        }
 
                                        entityManager.createEntityFromUrlWithProperties(
@@ -87,13 +90,32 @@ GameWindow {
             anchors.top: parent.bottom
 
             SimpleButton {
-                text: "Clear"
+                text: qsTr("Clear")
 
                 font.pixelSize: 12
                 color: "green"
                 textColor: "white"
 
                 onClicked: entityManager.removeEntitiesByFilter(["grain"])
+            }
+
+            SimpleButton {
+                id: sandColorButton
+                text: qsTr("Sand color")
+
+                font.pixelSize: 12
+                color: scene.penColor
+                textColor: "white"
+
+                onClicked: colorPicker.visible = true
+            }
+        }
+
+        ColorDialog {
+            id: colorPicker
+            visible:false
+            onAccepted: {
+                scene.penColor = colorPicker.selectedColor
             }
         }
     }
