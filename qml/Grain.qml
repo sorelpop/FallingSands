@@ -5,14 +5,17 @@ EntityBase {
     id: grain
     entityType: "box"
 
+    width: 20
+    height: 20
+
     Rectangle {
-        width: 20
-        height: 20
         color: "lightgreen"
+        anchors.fill: collider
     }
 
     BoxCollider {
-        anchors.fill: grain
+        id: collider
+        anchors.fill: parent
     }
 
 }
