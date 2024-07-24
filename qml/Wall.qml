@@ -14,5 +14,8 @@ EntityBase {
         id: collider
         anchors.fill: parent
         bodyType: Body.Static
+
+        friction: 1
+        restitution: 0
     }
 }

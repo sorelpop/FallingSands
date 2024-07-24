@@ -3,19 +3,24 @@ import QtQuick 2.0
 
 EntityBase {
     id: grain
-    entityType: "box"
+    entityType: "grain"
 
-    width: 20
-    height: 20
+    width: 3
+    height: 3
 
     Rectangle {
         color: "lightgreen"
         anchors.fill: collider
+        radius: 180
     }
 
-    BoxCollider {
+    CircleCollider {
         id: collider
-        anchors.fill: parent
-    }
 
+        radius: width/2
+
+        friction: 1
+        restitution: 0
+        density: 0.5
+    }
 }

@@ -43,51 +43,44 @@ GameWindow {
             anchors.fill: parent
             color: "grey"
 
-            Text {
-                id: textElement
-                // qsTr() uses the internationalization feature for multi-language support
-                text: qsTr("Hello Felgo World")
-                color: "#ffffff"
-                anchors.centerIn: parent
-            }
-
             MouseArea {
                 anchors.fill: parent
-
-                // when the rectangle that fits the whole scene is pressed, change the background color and the text
-                onPressed: mouse => {
-                               var newGrainProperties = {
-                                   x: mouse.x,
-                                   y: mouse.y,
-                               }
-
-                               entityManager.createEntityFromUrlWithProperties(
-                                           Qt.resolvedUrl("Grain.qml"),
-                                           newGrainProperties);
-                               console.debug("pressed position:", mouse.x, mouse.y)
-                           }
-
                 onPositionChanged: mouse => {
-                                       console.debug("mouseMoved or touchDragged position:", mouse.x, mouse.y)
+                                       var newGrainProperties = {
+                                           x: mouse.x,
+                                           y: mouse.y,
+                                       }
+
+                                       entityManager.createEntityFromUrlWithProperties(
+                                                   Qt.resolvedUrl("Grain.qml"),
+                                                   newGrainProperties);
                                    }
 
-                // revert the text & color after the touch/mouse button was released
-                // also States could be used for that - search for "QML States" in the doc
-                onReleased: mouse => {
-                                textElement.text = qsTr("Hello Felgo World")
-                                rectangle.color = "grey"
-                                console.debug("released position:", mouse.x, mouse.y)
-                            }
             }
         }// Rectangle with size of logical scene
 
+        // Floor
         Wall {
-            height: 20
+            height: 5
             anchors {
                 bottom: scene.bottom
                 left: scene.left
                 right: scene.right
             }
+        }
+
+        // Left wall
+        Wall {
+            width: 5
+            height: scene.height
+            anchors.left: scene.left
+        }
+
+        // Right wall
+        Wall {
+            width: 5
+            height: scene.height
+            anchors.right: scene.right
         }
     }
 }
