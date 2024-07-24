@@ -7,8 +7,8 @@ GameWindow {
     id: gameWindow
 
     EntityManager {
-      id: entityManager
-      entityContainer: scene
+        id: entityManager
+        entityContainer: scene
     }
 
     // You get free licenseKeys from https://felgo.com/licenseKey
@@ -48,22 +48,43 @@ GameWindow {
             color: "white"
 
             MouseArea {
+                hoverEnabled: true
                 anchors.fill: parent
                 onPositionChanged: mouse => {
-                                       var newGrainProperties = {
-                                           x: mouse.x,
-                                           y: mouse.y,
-                                           color: scene.penColor,
-                                           grainSize: scene.penSize
+                                       drawIndicator.x = mouse.x - drawIndicator.width / 2
+                                       drawIndicator.y = mouse.y - drawIndicator.height / 2
+
+                                       if (pressed && containsMouse)
+                                       {
+                                           var newGrainProperties = {
+                                               x: mouse.x,
+                                               y: mouse.y,
+                                               color: scene.penColor,
+                                               grainSize: scene.penSize
+                                           }
+
+                                           entityManager.createEntityFromUrlWithProperties(
+                                               Qt.resolvedUrl("Grain.qml"),
+                                               newGrainProperties);
                                        }
 
-                                       entityManager.createEntityFromUrlWithProperties(
-                                                   Qt.resolvedUrl("Grain.qml"),
-                                                   newGrainProperties);
                                    }
+
+                onEntered: drawIndicator.visible = true
+                onExited: drawIndicator.visible = false
 
             }
         }// Rectangle with size of logical scene
+
+        Rectangle {
+            id: drawIndicator
+            width: scene.penSize
+            height: scene.penSize
+            radius: 180
+            visible: false
+            color: scene.penColor
+            opacity: .5
+        }
 
         // Floor
         Wall {
@@ -91,7 +112,8 @@ GameWindow {
 
         Row {
             anchors.top: parent.bottom
-
+            anchors.left: parent.left
+            anchors.right: parent.right
             SimpleButton {
                 text: qsTr("Clear")
 
