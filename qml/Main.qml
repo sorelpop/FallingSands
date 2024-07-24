@@ -82,5 +82,19 @@ GameWindow {
             height: scene.height
             anchors.right: scene.right
         }
+
+        Row {
+            anchors.top: parent.bottom
+
+            SimpleButton {
+                text: "Clear"
+
+                font.pixelSize: 12
+                color: "green"
+                textColor: "white"
+
+                onClicked: entityManager.removeEntitiesByFilter(["grain"])
+            }
+        }
     }
 }
