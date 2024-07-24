@@ -80,5 +80,14 @@ GameWindow {
                             }
             }
         }// Rectangle with size of logical scene
+
+        Wall {
+            height: 20
+            anchors {
+                bottom: scene.bottom
+                left: scene.left
+                right: scene.right
+            }
+        }
     }
 }
