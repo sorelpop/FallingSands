@@ -4,6 +4,11 @@ import QtQuick 2.0
 GameWindow {
     id: gameWindow
 
+    EntityManager {
+      id: entityManager
+      entityContainer: scene
+    }
+
     // You get free licenseKeys from https://felgo.com/licenseKey
     // With a licenseKey you can:
     //  * Publish your games & apps for the app stores
@@ -27,6 +32,10 @@ GameWindow {
         width: 320
         height: 480
 
+        PhysicsWorld {
+            gravity.y: 9.81
+        }
+
         // background rectangle matching the logical scene size (= safe zone available on all devices)
         // see here for more details on content scaling and safe zone: https://felgo.com/doc/felgo-different-screen-sizes/
         Rectangle {
@@ -47,13 +56,18 @@ GameWindow {
 
                 // when the rectangle that fits the whole scene is pressed, change the background color and the text
                 onPressed: mouse => {
-                               textElement.text = qsTr("Scene-Rectangle is pressed at position " + Math.round(mouse.x) + "," + Math.round(mouse.y))
-                               rectangle.color = "black"
+                               var newGrainProperties = {
+                                   x: mouse.x,
+                                   y: mouse.y,
+                               }
+
+                               entityManager.createEntityFromUrlWithProperties(
+                                           Qt.resolvedUrl("Grain.qml"),
+                                           newGrainProperties);
                                console.debug("pressed position:", mouse.x, mouse.y)
                            }
 
                 onPositionChanged: mouse => {
-                                       textElement.text = qsTr("Scene-Rectangle is moved at position " + Math.round(mouse.x) + "," + Math.round(mouse.y))
                                        console.debug("mouseMoved or touchDragged position:", mouse.x, mouse.y)
                                    }
 
