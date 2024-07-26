@@ -2,8 +2,8 @@ import Felgo 4.0
 import QtQuick 2.0
 
 EntityBase {
-    id: grain
-    entityType: "grain"
+    id: fluid
+    entityType: "fluid"
 
     property color color: "lightgreen"
     property int size: 3
@@ -14,7 +14,7 @@ EntityBase {
     height: size
 
     Rectangle {
-        color: grain.color
+        color: fluid.color
         anchors.fill: collider
         radius: 180
     }
