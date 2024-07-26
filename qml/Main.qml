@@ -2,13 +2,13 @@ import Felgo 4.0
 import QtQuick 2.0
 import QtQuick.Dialogs
 import QtQuick.Controls
-import QtQuick.Layouts
 
 GameWindow {
     id: gameWindow
 
     EntityManager {
         id: entityManager
+
         entityContainer: scene
     }
 
@@ -50,6 +50,7 @@ GameWindow {
         // see here for more details on content scaling and safe zone: https://felgo.com/doc/felgo-different-screen-sizes/
         Rectangle {
             id: rectangle
+
             anchors.fill: parent
             color: "white"
 
@@ -78,12 +79,32 @@ GameWindow {
 
                 onEntered: drawIndicator.visible = true
                 onExited: drawIndicator.visible = false
-
             }
+
+            Toolbar{
+                drawTypeModel: ["Fluid", "Solid"]
+                onClearButtonPressed: entityManager.removeEntitiesByFilter(["grain"])
+                onGrainColorButtonPressed: colorPicker.visible = true
+                onPenSizeChanged: newPenSize => scene.penSize = newPenSize
+                onDrawTypeChanged: index => {
+                                       switch(index) {
+                                           case 0:
+                                           scene.penType = 0
+                                           break
+
+                                           case 1:
+                                           scene.penType = 1
+                                           break
+                                       }
+                                   }
+            }
+
         }// Rectangle with size of logical scene
 
+        // Indicator at the tip of the mouse cursor
         Rectangle {
             id: drawIndicator
+
             width: scene.penSize
             height: scene.penSize
             radius: 180
@@ -116,74 +137,10 @@ GameWindow {
             anchors.right: scene.right
         }
 
-        RowLayout {
-            anchors.top: parent.bottom
-            anchors.left: parent.left
-            anchors.right: parent.right
-            spacing: 1
-
-            SimpleButton {
-                text: qsTr("Clear")
-
-                font.pixelSize: 12
-                color: "green"
-                textColor: "white"
-
-                onClicked: entityManager.removeEntitiesByFilter(["grain"])
-            }
-
-            SimpleButton {
-                id: sandColorButton
-                text: qsTr("Sand color")
-
-                font.pixelSize: 12
-                color: scene.penColor
-                textColor: "white"
-
-                onClicked: colorPicker.visible = true
-            }
-
-            SpinBox {
-                id: grainSizePicker
-
-                property bool toolTipVisible: false
-                width: 120
-                value: 3
-                from: 1
-                to: 5
-
-                Layout.preferredHeight: sandColorButton.height
-
-                ToolTip.text: qsTr("Grain size")
-                ToolTip.visible: toolTipVisible
-
-                onValueModified: scene.penSize = grainSizePicker.value
-                onHoveredChanged: grainSizePicker.toolTipVisible = grainSizePicker.hovered
-            }
-
-            ComboBox {
-                height: sandColorButton.height
-                model: ["Fluid", "Solid"]
-                Layout.fillWidth: true
-                Layout.preferredHeight: sandColorButton.height
-
-                onActivated: index => {
-                                 switch(index) {
-                                     case 0:
-                                     scene.penType = 0
-                                     break
-
-                                     case 1:
-                                     scene.penType = 1
-                                     break
-                                 }
-
-                             }
-            }
-        }
-
+        // Color picker
         ColorDialog {
             id: colorPicker
+
             visible:false
             onAccepted: scene.penColor = colorPicker.selectedColor
         }
