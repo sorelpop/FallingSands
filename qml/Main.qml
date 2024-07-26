@@ -57,25 +57,32 @@ GameWindow {
             MouseArea {
                 hoverEnabled: true
                 anchors.fill: parent
-                onPositionChanged: mouse => {
-                                       drawIndicator.x = mouse.x - drawIndicator.width / 2
-                                       drawIndicator.y = mouse.y - drawIndicator.height / 2
+                onPositionChanged: mouse => handleMousePositionChanged(mouse)
 
-                                       if (pressed && containsMouse)
-                                       {
-                                           var newGrainProperties = {
-                                               x: mouse.x,
-                                               y: mouse.y,
-                                               color: scene.penColor,
-                                               size: scene.penSize * 2
-                                           }
-                                           var resolvedUrl = scene.penType == scene._DRAW_FLUID ? Qt.resolvedUrl("Fluid.qml") : Qt.resolvedUrl("Solid.qml")
-                                           entityManager.createEntityFromUrlWithProperties(
-                                               resolvedUrl,
-                                               newGrainProperties);
-                                       }
+                function handleMousePositionChanged(mouse) {
+                    updateDrawIndicator(mouse)
+                    if (pressed && containsMouse) {
+                        spawnGrain(mouse)
+                    }
+                }
 
-                                   }
+                function updateDrawIndicator(mouse) {
+                    drawIndicator.x = mouse.x - drawIndicator.width / 2
+                    drawIndicator.y = mouse.y - drawIndicator.height / 2
+                }
+
+                function spawnGrain(mouse) {
+                    var newGrainProperties = {
+                        x: mouse.x,
+                        y: mouse.y,
+                        color: scene.penColor,
+                        size: scene.penSize * 2
+                    }
+                    var resolvedUrl = scene.penType == scene._DRAW_FLUID ? Qt.resolvedUrl("Fluid.qml") : Qt.resolvedUrl("Solid.qml")
+                    entityManager.createEntityFromUrlWithProperties(
+                                resolvedUrl,
+                                newGrainProperties);
+                }
 
                 onEntered: drawIndicator.visible = true
                 onExited: drawIndicator.visible = false
