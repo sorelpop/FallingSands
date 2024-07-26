@@ -28,15 +28,17 @@ GameWindow {
     screenWidth: 640
     screenHeight: 960
 
+    enum DrawType {
+        FLUID,
+        SOLID
+    }
+
     Scene {
         id: scene
 
-        property int _DRAW_FLUID: 0
-        property int _DRAW_SOLUD: 1
-
         property color penColor: "darkblue"
         property int penSize: 3
-        property int penType: scene._DRAW_FLUID
+        property int penType: Main.DrawType.FLUID
 
         // the "logical size" - the scene content is auto-scaled to match the GameWindow size
         width: 420
@@ -78,7 +80,7 @@ GameWindow {
                         color: scene.penColor,
                         size: scene.penSize * 2
                     }
-                    var resolvedUrl = scene.penType == scene._DRAW_FLUID ? Qt.resolvedUrl("Fluid.qml") : Qt.resolvedUrl("Solid.qml")
+                    var resolvedUrl = scene.penType === Main.DrawType.FLUID ? Qt.resolvedUrl("Fluid.qml") : Qt.resolvedUrl("Solid.qml")
                     entityManager.createEntityFromUrlWithProperties(
                                 resolvedUrl,
                                 newGrainProperties);
@@ -96,11 +98,11 @@ GameWindow {
                 onDrawTypeChanged: index => {
                                        switch(index) {
                                            case 0:
-                                           scene.penType = 0
+                                           scene.penType = Main.DrawType.FLUID
                                            break
 
                                            case 1:
-                                           scene.penType = 1
+                                           scene.penType = Main.DrawType.SOLID
                                            break
                                        }
                                    }
