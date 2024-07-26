@@ -66,10 +66,9 @@ GameWindow {
                                                x: mouse.x,
                                                y: mouse.y,
                                                color: scene.penColor,
-                                               size: scene.penSize
+                                               size: scene.penSize * 2
                                            }
                                            var resolvedUrl = scene.penType == scene._DRAW_FLUID ? Qt.resolvedUrl("Fluid.qml") : Qt.resolvedUrl("Solid.qml")
-                                           console.debug(resolvedUrl)
                                            entityManager.createEntityFromUrlWithProperties(
                                                resolvedUrl,
                                                newGrainProperties);
@@ -130,7 +129,7 @@ GameWindow {
                 color: "green"
                 textColor: "white"
 
-                onClicked: entityManager.removeEntitiesByFilter(["fluid"])
+                onClicked: entityManager.removeEntitiesByFilter(["grain"])
             }
 
             SimpleButton {
