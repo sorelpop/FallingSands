@@ -2,6 +2,7 @@ import Felgo 4.0
 import QtQuick 2.0
 import QtQuick.Dialogs
 import QtQuick.Controls
+import QtQuick.Layouts
 
 GameWindow {
     id: gameWindow
@@ -29,12 +30,17 @@ GameWindow {
 
     Scene {
         id: scene
+
+        property int _DRAW_FLUID: 0
+        property int _DRAW_SOLUD: 1
+
         property color penColor: "darkblue"
         property int penSize: 3
+        property int penType: scene._DRAW_FLUID
 
         // the "logical size" - the scene content is auto-scaled to match the GameWindow size
-        width: 320
-        height: 480
+        width: 420
+        height: 580
 
         PhysicsWorld {
             gravity.y: 9.81
@@ -60,11 +66,12 @@ GameWindow {
                                                x: mouse.x,
                                                y: mouse.y,
                                                color: scene.penColor,
-                                               grainSize: scene.penSize
+                                               size: scene.penSize
                                            }
-
+                                           var resolvedUrl = scene.penType == scene._DRAW_FLUID ? Qt.resolvedUrl("Grain.qml") : Qt.resolvedUrl("Solid.qml")
+                                           console.debug(resolvedUrl)
                                            entityManager.createEntityFromUrlWithProperties(
-                                               Qt.resolvedUrl("Grain.qml"),
+                                               resolvedUrl,
                                                newGrainProperties);
                                        }
 
@@ -110,10 +117,12 @@ GameWindow {
             anchors.right: scene.right
         }
 
-        Row {
+        RowLayout {
             anchors.top: parent.bottom
             anchors.left: parent.left
             anchors.right: parent.right
+            spacing: 1
+
             SimpleButton {
                 text: qsTr("Clear")
 
@@ -139,18 +148,38 @@ GameWindow {
                 id: grainSizePicker
 
                 property bool toolTipVisible: false
-
+                width: 120
                 value: 3
                 from: 1
                 to: 5
 
-                height: sandColorButton.height
+                Layout.preferredHeight: sandColorButton.height
 
                 ToolTip.text: qsTr("Grain size")
                 ToolTip.visible: toolTipVisible
 
                 onValueModified: scene.penSize = grainSizePicker.value
                 onHoveredChanged: grainSizePicker.toolTipVisible = grainSizePicker.hovered
+            }
+
+            ComboBox {
+                height: sandColorButton.height
+                model: ["Fluid", "Solid"]
+                Layout.fillWidth: true
+                Layout.preferredHeight: sandColorButton.height
+
+                onActivated: index => {
+                                 switch(index) {
+                                     case 0:
+                                     scene.penType = 0
+                                     break
+
+                                     case 1:
+                                     scene.penType = 1
+                                     break
+                                 }
+
+                             }
             }
         }
 

@@ -2,10 +2,10 @@ import Felgo 4.0
 import QtQuick 2.0
 
 EntityBase {
-    id: grain
-    entityType: "grain"
+    id: solid
+    entityType: "solid"
 
-    property color color: "lightgreen"
+    property color color: "gray"
     property int size: 3
 
     transformOrigin: Item.TopLeft
@@ -14,20 +14,19 @@ EntityBase {
     height: size
 
     Rectangle {
-        color: grain.color
-        anchors.fill: collider
+        color: solid.color
         radius: 180
+        anchors.fill: collider
     }
 
-    CircleCollider {
+    BoxCollider {
         id: collider
 
-        radius: size / 2
         x: -size / 2
         y: -size / 2
 
-        friction: 1
+        bodyType: Body.Static
+        friction: .4
         restitution: 0
-        density: 0.5
     }
 }
