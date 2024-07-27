@@ -30,14 +30,15 @@ GameWindow {
 
     enum DrawType {
         FLUID,
-        SOLID
+        SOLID,
+        ERASE
     }
 
     Scene {
         id: scene
 
         property color penColor: "darkblue"
-        property int penSize: 3
+        property int penSize: 6
         property int penType: Main.DrawType.FLUID
 
         // the "logical size" - the scene content is auto-scaled to match the GameWindow size
@@ -45,6 +46,7 @@ GameWindow {
         height: 580
 
         PhysicsWorld {
+            id: physicsWorld
             gravity.y: 9.81
         }
 
@@ -64,7 +66,12 @@ GameWindow {
                 function handleMousePositionChanged(mouse) {
                     updateDrawIndicator(mouse)
                     if (pressed && containsMouse) {
-                        spawnGrain(mouse)
+                        if (scene.penType === Main.DrawType.ERASE) {
+                            eraseGrain(mouse)
+                        }
+                        else {
+                            spawnGrain(mouse)
+                        }
                     }
                 }
 
@@ -78,7 +85,7 @@ GameWindow {
                         x: mouse.x,
                         y: mouse.y,
                         color: scene.penColor,
-                        size: scene.penSize * 2
+                        size: scene.penSize
                     }
                     var resolvedUrl = scene.penType === Main.DrawType.FLUID ? Qt.resolvedUrl("Fluid.qml") : Qt.resolvedUrl("Solid.qml")
                     entityManager.createEntityFromUrlWithProperties(
@@ -86,15 +93,26 @@ GameWindow {
                                 newGrainProperties);
                 }
 
+                function eraseGrain(mouse) {
+                    var selectedBody = physicsWorld.bodyAt(Qt.point(mouse.x, mouse.y));
+                    if (selectedBody === null) {
+                        return;
+                    }
+
+                    if (selectedBody.target.entityType === "grain") {
+                        entityManager.removeEntityById(selectedBody.target.entityId)
+                    }
+                }
+
                 onEntered: drawIndicator.visible = true
                 onExited: drawIndicator.visible = false
             }
 
-            Toolbar{
-                drawTypeModel: ["Fluid", "Solid"]
+            Toolbar {
+                drawTypeModel: ["Fluid", "Solid", "Erase"]
                 onClearButtonPressed: entityManager.removeEntitiesByFilter(["grain"])
                 onGrainColorButtonPressed: colorPicker.visible = true
-                onPenSizeChanged: newPenSize => scene.penSize = newPenSize
+                onPenSizeChanged: newPenSize => scene.penSize = newPenSize * 2
                 onDrawTypeChanged: index => {
                                        switch(index) {
                                            case 0:
@@ -104,10 +122,13 @@ GameWindow {
                                            case 1:
                                            scene.penType = Main.DrawType.SOLID
                                            break
+
+                                           case 2:
+                                           scene.penType = Main.DrawType.ERASE
+                                           break
                                        }
                                    }
             }
-
         }// Rectangle with size of logical scene
 
         // Indicator at the tip of the mouse cursor

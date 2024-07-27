@@ -6,13 +6,13 @@ EntityBase {
 
     Rectangle {
         id: rectangle
-        anchors.fill: parent
+        anchors.fill: collider
         color: "brown"
     }
 
     BoxCollider {
         id: collider
-        anchors.fill: parent
+
         bodyType: Body.Static
 
         friction: 1

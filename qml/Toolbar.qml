@@ -52,7 +52,7 @@ RowLayout {
         ToolTip.text: qsTr("Grain size")
         ToolTip.visible: false
 
-        onValueModified: penSizeChanged(grainSizePicker.value)
+        onValueModified: toolbar.penSizeChanged(grainSizePicker.value)
         onHoveredChanged: ToolTip.visible = grainSizePicker.hovered
     }
 
@@ -65,7 +65,7 @@ RowLayout {
         Layout.fillWidth: true
         Layout.preferredHeight: grainColorButton.height
 
-        onActivated: index => drawTypeChanged(index)
+        onActivated: index => toolbar.drawTypeChanged(index)
     }
 
     property alias drawTypeModel : drawTypePicker.model
