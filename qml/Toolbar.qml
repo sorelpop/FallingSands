@@ -6,11 +6,9 @@ import QtQuick.Controls
 RowLayout {
     id: toolbar
 
-    anchors.top: parent.bottom
-    anchors.left: parent.left
-    anchors.right: parent.right
-
     spacing: 1
+
+    property alias drawTypeModel : drawTypePicker.model
 
     signal clearButtonPressed
     signal grainColorButtonPressed
@@ -50,10 +48,9 @@ RowLayout {
         Layout.preferredHeight: grainColorButton.height
 
         ToolTip.text: qsTr("Grain size")
-        ToolTip.visible: false
+        ToolTip.visible: grainSizePicker.hovered
 
         onValueModified: toolbar.penSizeChanged(grainSizePicker.value)
-        onHoveredChanged: ToolTip.visible = grainSizePicker.hovered
     }
 
     // Change draw mode
@@ -67,6 +64,4 @@ RowLayout {
 
         onActivated: index => toolbar.drawTypeChanged(index)
     }
-
-    property alias drawTypeModel : drawTypePicker.model
 }

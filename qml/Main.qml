@@ -107,44 +107,12 @@ GameWindow {
                 onEntered: drawIndicator.visible = true
                 onExited: drawIndicator.visible = false
             }
-
-            Toolbar {
-                drawTypeModel: ["Fluid", "Solid", "Erase"]
-                onClearButtonPressed: entityManager.removeEntitiesByFilter(["grain"])
-                onGrainColorButtonPressed: colorPicker.visible = true
-                onPenSizeChanged: newPenSize => scene.penSize = newPenSize * 2
-                onDrawTypeChanged: index => {
-                                       switch(index) {
-                                           case 0:
-                                           scene.penType = Main.DrawType.FLUID
-                                           break
-
-                                           case 1:
-                                           scene.penType = Main.DrawType.SOLID
-                                           break
-
-                                           case 2:
-                                           scene.penType = Main.DrawType.ERASE
-                                           break
-                                       }
-                                   }
-            }
         }// Rectangle with size of logical scene
-
-        // Indicator at the tip of the mouse cursor
-        Rectangle {
-            id: drawIndicator
-
-            width: scene.penSize
-            height: scene.penSize
-            radius: 180
-            visible: false
-            color: scene.penColor
-            opacity: .5
-        }
 
         // Floor
         Wall {
+            id: floor
+
             height: 5
             anchors {
                 bottom: scene.bottom
@@ -165,6 +133,53 @@ GameWindow {
             width: 5
             height: scene.height
             anchors.right: scene.right
+        }
+
+        // Buttons at the bottom of the game area
+        Toolbar {
+            anchors {
+                top: floor.bottom
+                left: floor.left
+                right: scene.right
+            }
+
+            drawTypeModel: ["Fluid", "Solid", "Erase"]
+            onClearButtonPressed: entityManager.removeEntitiesByFilter(["grain"])
+            onGrainColorButtonPressed: colorPicker.visible = true
+            onPenSizeChanged: newPenSize => scene.penSize = newPenSize * 2
+            onDrawTypeChanged: index => handleDrawTypeChanged(index)
+
+            function handleDrawTypeChanged(index) {
+                switch(index) {
+                    case 0:
+                    scene.penType = Main.DrawType.FLUID
+                    break
+
+                    case 1:
+                    scene.penType = Main.DrawType.SOLID
+                    break
+
+                    case 2:
+                    scene.penType = Main.DrawType.ERASE
+                    break
+
+                    default:
+                    console.assert(false, "Unhandled index encountered")
+                    break
+                }
+            }
+        }
+
+        // Indicator at the tip of the mouse cursor
+        Rectangle {
+            id: drawIndicator
+
+            width: scene.penSize
+            height: scene.penSize
+            radius: 180
+            visible: false
+            color: scene.penColor
+            opacity: .5
         }
 
         // Color picker
