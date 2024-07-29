@@ -137,12 +137,15 @@ GameWindow {
 
         // Buttons at the bottom of the game area
         Toolbar {
+            id: toolbar
+
             anchors {
                 top: floor.bottom
                 left: floor.left
                 right: scene.right
             }
 
+            grainColorButtonColor: scene.penColor
             drawTypeModel: ["Fluid", "Solid", "Erase"]
             onClearButtonPressed: entityManager.removeEntitiesByFilter(["grain"])
             onGrainColorButtonPressed: colorPicker.visible = true

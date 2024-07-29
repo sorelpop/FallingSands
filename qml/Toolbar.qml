@@ -4,11 +4,10 @@ import QtQuick.Layouts
 import QtQuick.Controls
 
 RowLayout {
-    id: toolbar
-
     spacing: 1
 
     property alias drawTypeModel : drawTypePicker.model
+    property alias grainColorButtonColor: grainColorButton.color
 
     signal clearButtonPressed
     signal grainColorButtonPressed
@@ -31,7 +30,6 @@ RowLayout {
 
         text: qsTr("Sand color")
         font.pixelSize: 12
-        color: scene.penColor
         textColor: "white"
 
         onClicked: toolbar.grainColorButtonPressed()
